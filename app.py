@@ -47,6 +47,40 @@ st.set_page_config(
     page_title="BRO groundwater | 2017-2018",
     page_icon="💧",
     layout="wide",
+    initial_sidebar_state="auto",
+)
+
+# Responsive layout: desktop/tablet = side by side, phone = vertical.
+# These CSS selectors target Streamlit layout elements, not map internals.
+st.markdown(
+    """
+    <style>
+    .block-container { padding-top: 1.15rem; padding-bottom: 1.6rem; }
+    [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
+        min-width: 0;
+    }
+    @media (max-width: 850px) {
+        .block-container {
+            padding-left: 0.75rem !important;
+            padding-right: 0.75rem !important;
+            padding-top: 0.6rem !important;
+        }
+        [data-testid="stHorizontalBlock"] {
+            flex-direction: column !important;
+            gap: 0.65rem !important;
+        }
+        [data-testid="stHorizontalBlock"] > [data-testid="stColumn"] {
+            width: 100% !important;
+            min-width: 0 !important;
+            flex: 1 1 100% !important;
+        }
+        h1 { font-size: 1.5rem !important; line-height: 1.25 !important; }
+        h3 { font-size: 1.1rem !important; }
+        [data-testid="stMetricValue"] { font-size: 1.35rem !important; }
+    }
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
 st.title("BRO groundwater validation dashboard")
@@ -140,7 +174,7 @@ def safe_float_label(number, decimals=2):
 
 
 def groundwater_plot(obs, sim, well_id, tube_number, gld_id, layer):
-    fig, ax = plt.subplots(figsize=(11, 4.8))
+    fig, ax = plt.subplots(figsize=(9, 4.6))
     # Drop NaN values so that sparse model dates still draw a line.
     model_clean = sim.dropna()
     obs_clean = obs.dropna()
@@ -301,8 +335,8 @@ with left:
 
     map_result = st_folium(
         m,
-        height=540,
-        width=None,
+        height=440,
+        use_container_width=True,
         key="bro_map",
         returned_objects=["last_object_clicked_tooltip"],
     )
